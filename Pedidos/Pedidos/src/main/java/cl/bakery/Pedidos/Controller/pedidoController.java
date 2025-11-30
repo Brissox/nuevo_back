@@ -1,7 +1,9 @@
 package cl.bakery.Pedidos.Controller;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +34,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -91,8 +94,9 @@ public class pedidoController {
         }
     }
 
+
     // ENDPOINT PARA REGISTRAR UN PEDIDO
-    @PostMapping
+    @PostMapping("/crear")
     @Operation(summary = "ENDPOINT QUE REGISTRA UN PEDIDO", description = "ENDPOINT QUE REGISTRA UN PEDIDO",requestBody= @io.swagger.v3.oas.annotations.parameters.RequestBody(description="PEDIDO QUE SE VA A REGISTRAR", required = true, content = @Content(schema = @Schema(implementation = pedido.class))))
     @ApiResponses (value = {
         @ApiResponse(responseCode = "200", description = "Se registro correctamente el pedido", content = @Content(mediaType = "application/json", schema = @Schema(implementation = pedido.class))),
@@ -104,6 +108,8 @@ public class pedidoController {
             pedido pedidoRegistrar = pedidoservice.crearPedido(pedidoGuardar);
             return ResponseEntity.ok(assembler.toModel(pedidoRegistrar));
     } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", "No se puede registrar el Pedido");
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No se puede registrar el Pedido");
     }
     }
@@ -138,20 +144,33 @@ public class pedidoController {
     }
 
     @GetMapping("/uid/{uid}")
-    public ResponseEntity<?> BuscarporUsuario(@RequestParam String uid) {
-        List<pedido> pedidos = pedidoservice.BuscarPorUsuario(uid);
-        if(pedidos.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encuentra el pedido");
-        } else {
-            return ResponseEntity.ok(assembler.toCollectionModel(pedidos));
-        }
+public ResponseEntity<List<pedido>> BuscarporUsuario(@PathVariable String uid) {
+
+    List<pedido> pedidos = pedidoservice.BuscarPorUsuario(uid);
+
+    if (pedidos.isEmpty()) {
+        return ResponseEntity.noContent().build();
     }
-    
+
+    return ResponseEntity.ok(pedidos);
+}
 
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<itempedido> items;
+  @PostMapping
+    @Operation(summary = "ENDPOINT QUE REGISTRA UN PRODUCTO", description = "ENDPOINT QUE REGISTRA UN PRODUCTO",requestBody= @io.swagger.v3.oas.annotations.parameters.RequestBody(description="PRODUCTO QUE SE VA A REGISTRAR", required = true, content = @Content(schema = @Schema(implementation = pedido.class))))
+    @ApiResponses (value = {
+        @ApiResponse(responseCode = "200", description = "Se registro correctamente el producto", content = @Content(mediaType = "application/json", schema = @Schema(implementation = pedido.class))),
+        @ApiResponse(responseCode = "500", description = "Indica que no se logro registrar el producto", content = @Content(mediaType = "application/json", schema = @Schema(type = "string", example = "No se puede registrar el producto")))
+    })
+    public ResponseEntity<?> GuardarPed(@RequestBody pedido pedGuardar){
+    try {
+            pedido pedRegistrar = pedidoservice.GuardarPedido(pedGuardar);
+            return ResponseEntity.ok(assembler.toModel(pedRegistrar));
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("No se puede registrar el Producto");
+    }
+    }
+
 }
 /*
         @DeleteMapping("/{ID_PEDIDO}")

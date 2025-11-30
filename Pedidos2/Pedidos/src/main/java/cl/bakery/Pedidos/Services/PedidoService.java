@@ -3,68 +3,38 @@ package cl.bakery.Pedidos.Services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cl.bakery.Pedidos.DTO.CrearPedidoDTO;
 import cl.bakery.Pedidos.DTO.DetallePedidoDTO;
 import cl.bakery.Pedidos.DTO.ProductoDTO;
-import cl.bakery.Pedidos.Model.itempedido;
+import cl.bakery.Pedidos.Model.ItemPedido;
 import cl.bakery.Pedidos.Model.pedido;
-import cl.bakery.Pedidos.Repository.pedidosRepository;
-import jakarta.transaction.Transactional;
+import cl.bakery.Pedidos.Repository.PedidoRepository;
 
 @Service
-@Transactional
+public class PedidoService {
 
+    private final PedidoRepository pedidoRepository;
+    private final ProductoClientService productosClient;
 
-
-public class pedidoServices {
-
-    
-
-    @Autowired
-    private pedidosRepository pedidorepository;
-    
-    public List<pedido> BuscarTodoPedido(){
-         List<pedido> pedidos = pedidorepository.findAll();    
-        pedidos.forEach(p -> p.getItems().size());
-        return pedidos;
-
+    public PedidoService(PedidoRepository pedidoRepository, ProductoClientService productosClient) {
+        this.pedidoRepository = pedidoRepository;
+        this.productosClient = productosClient;
     }
 
-    public pedido BuscarUnPedido(Long ID_PEDIDO){
-        return pedidorepository.findById(ID_PEDIDO).get();
-    }
-
-    public List<pedido> BuscarPorUsuario(String uid){
-        List<pedido> pedidos = pedidorepository.findByuid(uid);
-        pedidos.forEach(p -> p.getItems().size()); // forzar carga de items
-        return pedidos;
-    }
-
-    public pedido GuardarPedido(pedido pedido){
-        return pedidorepository.save(pedido);
-    }
-
-    public void EliminarPedido(Long ID_PEDIDO){
-        pedidorepository.deleteById(ID_PEDIDO);
-    }
-
-    @Autowired
-    private ProductoClientService productosClient;
-
-     @Transactional
+    @Transactional
     public pedido crearPedido(CrearPedidoDTO dto) {
 
         // Crear el pedido base
         pedido pedido = new pedido();
-        pedido.setUid(dto.getUid() != null ? dto.getUid().toString() : null);
+        pedido.setIdUsuario(dto.getIdUsuario() != null ? dto.getIdUsuario() : 0L);
         pedido.setCantidadProductos(dto.getCantidad_productos());
         pedido.setMetodoPago(dto.getMetodo_de_pago());
         pedido.setDescuentos(dto.getDescuentos());
 
-        List<itempedido> items = new ArrayList<>();
+        List<ItemPedido> items = new ArrayList<>();
         int total = 0;
 
         // Recorrer detalles
@@ -87,14 +57,22 @@ public class pedidoServices {
             total += subtotal;
 
             // Crear item del pedido
-            itempedido item = new itempedido();
+            ItemPedido item = new ItemPedido();
             item.setIdProducto(det.getIdProducto());
             item.setCantidad(det.getCantidad());
             item.setNombreProducto(producto.getNombre());
             item.setPrecioUnitario(precioUnitario);
             item.setSubtotal(subtotal);
             item.setPedido(pedido);
+
             items.add(item);
+        }
+
+        // Aplicar descuentos si vienen
+        if (dto.getDescuentos() != null) {
+            total -= dto.getDescuentos();
+            if (total < 0)
+                total = 0; // evitar totales negativos
         }
 
         // Asignar totales e ítems
@@ -102,8 +80,7 @@ public class pedidoServices {
         pedido.setItems(items);
 
         // Guardar el pedido
-        return pedidorepository.save(pedido);
+        return pedidoRepository.save(pedido);
     }
 
 }
-

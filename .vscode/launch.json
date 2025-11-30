@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "PedidosApplication",
+            "request": "launch",
+            "mainClass": "cl.bakery.Pedidos.PedidosApplication",
+            "projectName": ""
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-AutenticacionRegistroApplication<Autenticacion-Registro>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

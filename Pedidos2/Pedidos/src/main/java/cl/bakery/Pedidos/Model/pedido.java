@@ -5,55 +5,47 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
-@Table(name = "PEDIDO")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Todos los pedidos registrados en la empresa")
+@AllArgsConstructor
 public class pedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "U_ID", nullable = false)
-    private String uid;
+    private Long idUsuario;
 
-    @Column(name = "FECHA_CREACION")
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @Column(name = "CANTIDAD_PRODUCTOS", nullable = false)
-    private int cantidadProductos;
+    @Column(nullable = false)
+    private Integer cantidadProductos;
 
-    @Column(name = "METODO_PAGO", nullable = false)
+    @Column(nullable = false)
     private String metodoPago;
 
-    @Column(name = "DESCUENTOS")
-    private Integer descuentos;
+    private Integer descuentos; 
 
-    @Column(name = "TOTAL")
     private Integer total;
 
-    @Column(name = "ESTADO")
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    private EstadoPedido estado = EstadoPedido.CREADO;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<itempedido> items;
+    private List<ItemPedido> items;
 }
