@@ -1,0 +1,94 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AutenticacionRegistroApplication<Autenticacion-Registro>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Autenticacion_Registro.AutenticacionRegistroApplication",
+            "projectName": "Autenticacion-Registro",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CarritoApplication<Carrito>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Carrito.CarritoApplication",
+            "projectName": "Carrito",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EnviosApplication<Envios>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Envios.EnviosApplication",
+            "projectName": "Envios",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PagosApplication<Pagos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Pagos.PagosApplication",
+            "projectName": "Pagos",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PedidosApplication<Pedidos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Pedidos.PedidosApplication",
+            "projectName": "Pedidos",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ProductosApplication<Productos>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Productos.ProductosApplication",
+            "projectName": "Productos",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-RyCApplication<RyC>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.RyC.RyCApplication",
+            "projectName": "RyC",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-SoporteApplication<Soporte>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Soporte.SoporteApplication",
+            "projectName": "Soporte",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-UsuariosApplication<Usuarios>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cl.bakery.Usuarios.UsuariosApplication",
+            "projectName": "Usuarios",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
