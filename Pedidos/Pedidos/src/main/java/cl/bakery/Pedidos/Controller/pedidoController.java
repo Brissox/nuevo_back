@@ -1,5 +1,6 @@
 package cl.bakery.Pedidos.Controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import cl.bakery.Pedidos.Assembler.pedidoModelAssembler;
+import cl.bakery.Pedidos.DTO.CrearPedidoDTO;
+import cl.bakery.Pedidos.Model.itempedido;
 import cl.bakery.Pedidos.Model.pedido;
 import cl.bakery.Pedidos.Services.pedidoServices;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +29,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.OneToMany;
 
 @RestController
 @RequestMapping("/api/v1/Pedidos")
@@ -89,14 +97,15 @@ public class pedidoController {
         @ApiResponse(responseCode = "500", description = "Indica que no se logro registrar el pedido", content = @Content(mediaType = "application/json", schema = @Schema(type = "string", example = "No se puede registrar el pedido")))
     })
 
-    public ResponseEntity<?> GuardarPedido(@RequestBody pedido pedidoGuardar){
+    public ResponseEntity<?> crearPedido(@RequestBody CrearPedidoDTO pedidoGuardar){
     try {
-            pedido pedidoRegistrar = pedidoservice.GuardarPedido(pedidoGuardar);
-            return ResponseEntity.ok(assembler.toModel(pedidoGuardar));
+            pedido pedidoRegistrar = pedidoservice.crearPedido(pedidoGuardar);
+            return ResponseEntity.ok(assembler.toModel(pedidoRegistrar));
     } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("No se puede registrar el Pedido");
     }
     }
+
 
 // ENDPOINT PARA EDITAR UN PEDIDO
     @PutMapping("/{ID_PEDIDO}")
@@ -112,17 +121,25 @@ public class pedidoController {
     public ResponseEntity<?> ActualizarPedido(@PathVariable Long ID_PEDIDO, @RequestBody pedido pedidoActualizar){
         try {
             pedido pedidoActualizado = pedidoservice.BuscarUnPedido(ID_PEDIDO);
-            pedidoActualizado.setFecha(pedidoActualizar.getFecha());
-            pedidoActualizado.setVendedor(pedidoActualizar.getVendedor());
-            pedidoActualizado.setMonto(pedidoActualizar.getMonto());
-            pedidoActualizado.setCliente(pedidoActualizar.getCliente());
+            pedidoActualizado.setFechaCreacion(pedidoActualizar.getFechaCreacion());
+            pedidoActualizado.setCantidadProductos(pedidoActualizar.getCantidadProductos());
+            pedidoActualizado.setMetodoPago(pedidoActualizar.getMetodoPago());
+            pedidoActualizado.setDescuentos(pedidoActualizar.getDescuentos());
+            pedidoActualizado.setTotal(pedidoActualizar.getTotal());
+            pedidoActualizado.setEstado(pedidoActualizar.getEstado());
+
             pedidoservice.GuardarPedido(pedidoActualizado);
             return ResponseEntity.ok(assembler.toModel(pedidoActualizar));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido no esta registrado");
         }
     }
-    
+
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<itempedido> items;
+}
 /*
         @DeleteMapping("/{ID_PEDIDO}")
         public ResponseEntity<String> EliminarPedido(@PathVariable Long ID_PEDIDO){
@@ -136,4 +153,4 @@ public class pedidoController {
         }
  */
 
-}
+

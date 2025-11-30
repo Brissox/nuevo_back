@@ -1,14 +1,10 @@
 package cl.bakery.Usuarios.Services;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import cl.bakery.Usuarios.DTO.EditarUsuarioDTO;
 import cl.bakery.Usuarios.Model.usuario;
@@ -78,7 +74,7 @@ public class usuarioServices {
 
         return usuarioRepository.save(usuario);
     }
-
+/* 
      public void actualizarUsuario(String uidFb, String idFirebase, MultipartFile imagen) throws IOException {
         Optional<usuario> optUsuario = usuarioRepository.findByUidFb(uidFb);
         if (optUsuario.isEmpty()) {
@@ -97,5 +93,5 @@ public class usuarioServices {
 
         usuarioRepository.save(usuario);
     }
-
+*/
 }

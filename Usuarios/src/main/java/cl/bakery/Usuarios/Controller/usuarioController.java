@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -27,7 +24,6 @@ import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import cl.bakery.Usuarios.Assembler.usuarioModelAssembler;
 import cl.bakery.Usuarios.DTO.EditarUsuarioDTO;
-import cl.bakery.Usuarios.Model.Rol;
 import cl.bakery.Usuarios.Model.usuario;
 import cl.bakery.Usuarios.Services.DescuentoClientService;
 import cl.bakery.Usuarios.Services.usuarioServices;
@@ -414,7 +410,7 @@ public class usuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no esta registrado");
         }
     }
-
+/* 
     @PutMapping("/{uidFb}")
     public ResponseEntity<String> actualizarUsuarioConImagen(
             @PathVariable String uidFb,
@@ -428,5 +424,5 @@ public class usuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error al actualizar usuario: " + e.getMessage());
         }
-} 
+} */
 }
