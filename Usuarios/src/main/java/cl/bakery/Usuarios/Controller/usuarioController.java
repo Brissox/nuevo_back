@@ -1,5 +1,6 @@
 package cl.bakery.Usuarios.Controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -280,35 +283,6 @@ public class usuarioController {
         }
     }
 
-    /*
-     * //ENDPOINT PARA editar un usuario segun id
-     * 
-     * @PutMapping("/E/{ID_USUARIO}") //SOLO PERMITE ACTUALIZAR ESCRIBIENDO TODOS
-     * LOS DATOS
-     * 
-     * @Operation(summary = "ENDPOINT QUE EDITA UN ESTADO DE USUARIO", description =
-     * "ENDPOINT QUE EDITA UN ESTADO DE USUARIO",
-     * requestBody=@io.swagger.v3.oas.annotations.parameters.RequestBody(
-     * description="USUARIO QUE SE VA A EDITAR", required = true, content
-     * = @Content(schema = @Schema(implementation = usuario.class))))
-     * 
-     * @Parameters (value = {
-     * 
-     * @Parameter (name="ID_USUARIO", description= "ID del usuario que se editara",
-     * in = ParameterIn.PATH, required= true)})
-     * 
-     * @ApiResponses (value = {
-     * 
-     * @ApiResponse(responseCode = "200", description =
-     * "Se edito correctamente el estado del usuario", content = @Content(mediaType
-     * = "application/json", schema = @Schema(implementation = usuario.class))),
-     * 
-     * @ApiResponse(responseCode = "500", description =
-     * "Usuario no esta registrado", content = @Content(mediaType =
-     * "application/json", schema = @Schema(type = "string", example =
-     * "No se puede registrar el usuario")))
-     * })
-     */
 
     @DeleteMapping("/{ID_USUARIO}")
     public ResponseEntity<String> EliminarUsuario(@PathVariable Integer ID_USUARIO) {
@@ -321,27 +295,7 @@ public class usuarioController {
         }
     }
 
-    /*
-     * @PutMapping("/{uid}")
-     * 
-     * @Operation(summary = "Actualiza los datos de un usuario por UID")
-     * public ResponseEntity<?> actualizarUsuario(@PathVariable String
-     * uid, @RequestBody usuario usuarioActualizar) {
-     * try {
-     * usuario usuarioActualizado = usuarioservices.BuscarUnUsuario(uid);
-     * usuarioActualizado.setNombre(usuarioActualizar.getNombre());
-     * usuarioActualizado.setDireccion(usuarioActualizar.getDireccion());
-     * usuarioActualizado.setCelular(usuarioActualizar.getCelular());
-     * usuarioActualizado.setEstado(usuarioActualizar.getEstado());
-     * usuarioservices.GuardarUsuario(usuarioActualizado);
-     * return ResponseEntity.ok(assembler.toModel(usuarioActualizado));
-     * } catch (Exception e) {
-     * return
-     * ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no está registrado"
-     * );
-     * }
-     * 
-     */
+
     @PatchMapping("/{ID_USUARIO}")
     @Operation(summary = "ENDPOINT QUE EDITA PARCIALMENTE UN USUARIO", description = "PERMITE EDITAR SOLO LOS CAMPOS ENVIADOS", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "CAMPOS DEL USUARIO A EDITAR", required = true, content = @Content(schema = @Schema(implementation = usuario.class))))
     @Parameters(value = {
@@ -410,19 +364,23 @@ public class usuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no esta registrado");
         }
     }
-/* 
-    @PutMapping("/{uidFb}")
-    public ResponseEntity<String> actualizarUsuarioConImagen(
-            @PathVariable String uidFb,
-            @RequestParam String idFirebase,
-            @RequestPart(required = false) MultipartFile imagen) {
 
-        try {
-            usuarioServices.actualizarUsuario(uidFb, idFirebase, imagen);
-            return ResponseEntity.ok("Usuario actualizado correctamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar usuario: " + e.getMessage());
-        }
-} */
+     @PutMapping("/{uid}/imagen")
+        public ResponseEntity<?> actualizarImagen(
+        @PathVariable String uid,
+        @RequestParam("imagen") MultipartFile imagen) {
+
+    if (imagen.isEmpty()) {
+        return ResponseEntity.badRequest().body("Archivo vacío");
+    }
+
+    try {
+        // Ejemplo: guardar en BLOB
+        usuarioservices.actualizarImagen(uid, imagen.getBytes());
+        return ResponseEntity.ok("Imagen actualizada");
+    } catch (IOException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body("Error al procesar la imagen");
+    }
 }
+ }

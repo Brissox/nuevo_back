@@ -1,10 +1,18 @@
 package cl.bakery.Usuarios.Services;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Blob;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import cl.bakery.Usuarios.DTO.EditarUsuarioDTO;
 import cl.bakery.Usuarios.Model.usuario;
@@ -74,24 +82,20 @@ public class usuarioServices {
 
         return usuarioRepository.save(usuario);
     }
-/* 
-     public void actualizarUsuario(String uidFb, String idFirebase, MultipartFile imagen) throws IOException {
-        Optional<usuario> optUsuario = usuarioRepository.findByUidFb(uidFb);
-        if (optUsuario.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
 
-        usuario usuario = optUsuario.get();
-        usuario.setUidFb(uidFb);
+   @Transactional
+public void actualizarImagen(String uidFb, byte[] imagenBytes) {
+    usuario usuario = usuarioRepository.findByUidFb(uidFb)
+                          .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Guardar imagen si se envía
-        if (imagen != null && !imagen.isEmpty()) {
-            String rutaImagen = "/ruta/imagenes/" + imagen.getOriginalFilename();
-            imagen.transferTo(new File(rutaImagen));
-            usuario.set(rutaImagen);
-        }
-
+    try {
+        Blob blob = new SerialBlob(imagenBytes); // Convertimos byte[] a Blob
+        usuario.setImagenUrl(blob);
         usuarioRepository.save(usuario);
+    } catch (Exception e) {
+        throw new RuntimeException("Error al convertir imagen a Blob", e);
     }
-*/
 }
+    }
+
+
