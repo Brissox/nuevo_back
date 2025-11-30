@@ -34,6 +34,10 @@ public class pedidoServices {
         return pedidorepository.findById(ID_PEDIDO).get();
     }
 
+    public List<pedido> BuscarPorUsuario(String uid){
+        return pedidorepository.findByuid(uid);
+    }
+
     public pedido GuardarPedido(pedido pedido){
         return pedidorepository.save(pedido);
     }

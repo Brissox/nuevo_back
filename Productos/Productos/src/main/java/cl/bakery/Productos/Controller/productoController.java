@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 
 @RestController
-@RequestMapping("/api/v1/Productos")
+@RequestMapping("Productos")
 public class productoController {
 
 

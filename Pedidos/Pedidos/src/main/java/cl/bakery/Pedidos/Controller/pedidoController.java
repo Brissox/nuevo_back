@@ -32,9 +32,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
-@RequestMapping("/api/v1/Pedidos")
+@RequestMapping("Pedidos")
 
 public class pedidoController {
     
@@ -134,6 +136,17 @@ public class pedidoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido no esta registrado");
         }
     }
+
+    @GetMapping("/uid/{uid}")
+    public ResponseEntity<?> BuscarporUsuario(@RequestParam String uid) {
+        List<pedido> pedidos = pedidoservice.BuscarPorUsuario(uid);
+        if(pedidos.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encuentra el pedido");
+        } else {
+            return ResponseEntity.ok(assembler.toCollectionModel(pedidos));
+        }
+    }
+    
 
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)

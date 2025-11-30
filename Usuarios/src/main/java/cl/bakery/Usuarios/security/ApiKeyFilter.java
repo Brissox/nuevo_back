@@ -47,20 +47,17 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
+        
         // permitir preflight CORS sin API Key
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
+
         // leer encabezado
-        String apiKey = request.getHeader("X-API-KEY");
-        if (apiKey == null) {
-            apiKey = request.getHeader("x-api-key");
-        }
-        
-        logger.debug("API Key recibida: {}", apiKey);
+        String apiKey = request.getHeader(HEADER_NAME);
+        logger.debug("Header {} = {}", HEADER_NAME, apiKey);
 
         // validar API Key
         if (apiKey == null || validApiKey == null || !apiKey.trim().equals(validApiKey)) {
@@ -69,14 +66,13 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             response.getWriter().write("API KEY INVALIDA O AUSENTE");
             return;
         }
-
-        // MARCAR COMO AUTENTICADO
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken("apikey-user", null,
                 Collections.emptyList());
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-
+        // continuar con la cadena
         filterChain.doFilter(request, response);
     }
 }
+
