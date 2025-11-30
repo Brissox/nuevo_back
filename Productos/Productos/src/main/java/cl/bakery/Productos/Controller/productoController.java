@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cl.bakery.Productos.Assembler.productoModelAssembler;
@@ -130,6 +132,29 @@ public class productoController {
             return ResponseEntity.ok(assembler.toModel(productoActualizar));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no esta registrado");
+        }
+    } 
+    
+    @PatchMapping("/descontar")
+    public ResponseEntity<?> descontarStock(
+            @RequestParam Long idProducto,
+            @RequestParam int cantidad) {
+
+        try {
+            producto prod = productoService.BuscarUnProducto(idProducto);
+
+            if (prod.getStock() < cantidad) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Stock insuficiente");
+            }
+
+            prod.setStock(prod.getStock() - cantidad);
+            productoService.GuardarProducto(prod);
+
+            return ResponseEntity.ok("Stock descontado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Producto no encontrado");
         }
     }
     

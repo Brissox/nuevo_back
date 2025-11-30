@@ -3,18 +3,32 @@ package cl.bakery.Productos.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
+@Configuration
+
+@OpenAPIDefinition(
+    info = @io.swagger.v3.oas.annotations.info.Info(title = "Pasteleria Mil sabores - B2C Tech - DUOC 2025", version = "2.0",
+        description = "Documentación de la API de Pedidos"),
+    security = @SecurityRequirement(name = "apiKey") // Esto aplica la API Key globalmente
+)
+@SecurityScheme(
+    name = "apiKey",
+    type = SecuritySchemeType.APIKEY,
+    in = SecuritySchemeIn.HEADER,
+    paramName = "X-API-KEY"
+)
+
 public class SwaggerConfig {
-       @Bean
-    public OpenAPI customOpenAPI(){
-        return new OpenAPI().info(
-            new Info()
-            .title("Pasteleria Mil Sabores ")
-            .version("2.0")
-            .description("Documentación de la API de Productos")
-        );
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI();
     }
-    
 }

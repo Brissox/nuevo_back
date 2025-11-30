@@ -9,8 +9,9 @@ public class CrearPedidoDTO {
 
     private String uid;
     private String fecha;
-    private int cantidad_productos;
+    private Integer cantidad_productos;
     private String metodo_de_pago;
-    private int descuentos;
+    private Integer descuentos;
     private List<DetallePedidoDTO> detalles;
 }
+

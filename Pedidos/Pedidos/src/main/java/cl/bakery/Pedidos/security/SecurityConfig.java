@@ -30,10 +30,8 @@ public class SecurityConfig {
                                                 "/swagger-ui/**",
                                                 "/swagger-ui.html",
                                                 "/v3/api-docs/**",
-                                                "/doc/**",
-                                                "/Usuarios/**" // ← AGREGA ESTO SI QUIERES QUE NO PIDA API-KEY
-
-                                ).permitAll() // ← PERMITIR SWAGGER COMPLETO
+                                                "/doc/**")
+                                .permitAll() // ← PERMITIR SWAGGER COMPLETO
                                 .anyRequest().authenticated());
 
                 http.addFilterBefore(apiKeyFilter, UsernamePasswordAuthenticationFilter.class);

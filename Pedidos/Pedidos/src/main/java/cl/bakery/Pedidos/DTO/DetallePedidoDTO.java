@@ -7,3 +7,4 @@ public class DetallePedidoDTO {
     private Long idProducto;
     private Integer cantidad;
 }
+

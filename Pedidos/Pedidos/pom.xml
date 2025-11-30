@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Pedidos</name>
 	<description>Demo project for Spring Boot</description>
-		<url/>
+	<url/>
 	<licenses>
 		<license/>
 	</licenses>
@@ -110,15 +110,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
-
-		<dependency>
-    		<groupId>org.hibernate.validator</groupId>
-    		<artifactId>hibernate-validator</artifactId>
-		</dependency>
 	</dependencies>
-
-
-
 
 
 	<build>
